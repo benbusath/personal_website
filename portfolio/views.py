@@ -4,4 +4,4 @@ from projects.models import projects
 def portfolio(request):
     projects = Project.objects.all()
     context = {"projects": projects}
-    return render(request, 'portfolio.html', context
+    return render(request, 'portfolio.html', context)
