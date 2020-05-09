@@ -1,16 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% block meta %}	
+<title>Ben Busath - Home</title>
+{% endblock %}
 {% block page_content %}
-<html lang="en"> 
-<head>
-	<title>DevCard - Bootstrap 4 vCard &amp; Portfolio Template For Developers</title>
-	
-	<!-- Meta -->
-</head> 
-
-<body>
-	
 	<div class="main-wrapper">
 		
 		<section class="about-me-section p-3 p-lg-5 theme-bg-light">
@@ -35,7 +28,7 @@
 		<section class="overview-section p-3 p-lg-5">
 			<div class="container">
 				<h2 class="section-title font-weight-bold mb-3">What I do</h2>
-				<div class="section-intro mb-5">I have years of experience developing data-based solutions for a diverse range of domains. Below is a quick overview of my main technical skill sets and technologies I use. Want to find out more about my experience? Check out my <a href="resume.html">online resume</a> and <a href="portfolio.html">project portfolio</a>.</div>
+				<div class="section-intro mb-5">I have experience developing data-based solutions for a diverse range of domains. Below is a quick overview of my main technical skill sets and technologies I use. Want to find out more about my experience? Check out my <a href="{% static 'Resume.pdf' %}">online resume</a> and <a href="{% url 'portfolio' %}">project portfolio</a>.</div>
 				<div class="row">
 					<div class="item col-6 col-lg-3">
 						<div class="item-inner">
@@ -210,102 +203,31 @@
 			<div class="container">
 				<h2 class="section-title font-weight-bold mb-5">Featured Projects</h2>
 				<div class="row">
+					{% for project in projects %}
 					<div class="col-md-6 mb-5">
 						<div class="card project-card">
 							<div class="row no-gutters">
 								<div class="col-lg-4 card-img-holder">
-									<img src="{% static 'images/project/project-1.jpg' %}" class="card-img" alt="image">
+									<img src="{{ project.image.url }}" class="card-img" alt="image">
 								</div>
 								<div class="col-lg-8">
 									<div class="card-body">
-										<h5 class="card-title"><a href="project.html" class="theme-link">Project Heading</a></h5>
-										<p class="card-text">Project intro lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cum sociis natoque penatibus et magnis dis parturient montes.</p>
-										<p class="card-text"><small class="text-muted">Client: Google</small></p>
+										<h5 class="card-title"><a href="{% url 'project' project.pk %}" class="theme-link">{{ project.title }}</a></h5>
+										<p class="card-text">{{ project.description }}</p>
 									</div>
 								</div>
 							</div>
 							<div class="link-mask">
-								<a class="link-mask-link" href="project.html"></a>
+								<a class="link-mask-link" href="{% url 'project' project.pk %}"></a>
 								<div class="link-mask-text">
-									<a class="btn btn-secondary" href="project.html">
+									<a class="btn btn-secondary" href="{% url 'project' project.pk %}">
 										<i class="fas fa-eye mr-2"></i>View Case Study
 									</a>
 								</div>
 							</div><!--//link-mask-->
 						</div><!--//card-->
 					</div><!--//col-->
-					<div class="col-md-6 mb-5">	
-						<div class="card project-card">
-							<div class="row no-gutters">
-								<div class="col-lg-4 card-img-holder">
-									<img src="{% static 'images/project/project-2.jpg' %}" class="card-img" alt="image">
-								</div>
-								<div class="col-lg-8">
-									<div class="card-body">
-										<h5 class="card-title"><a href="project.html" class="theme-link">Project Heading</a></h5>
-										<p class="card-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. </p>
-										<p class="card-text"><small class="text-muted">Client: Dropbox</small></p>
-									</div>
-								</div>
-							</div>
-							<div class="link-mask">
-								<a class="link-mask-link" href="project.html"></a>
-								<div class="link-mask-text">
-									<a class="btn btn-secondary" href="project.html">
-										<i class="fas fa-eye mr-2"></i>View Case Study
-									</a>
-								</div>
-							</div><!--//link-mask-->
-						</div><!--//card-->
-					</div><!--//col-->
-					<div class="col-md-6 mb-5">
-						<div class="card project-card">
-							<div class="row no-gutters">
-								<div class="col-lg-4 card-img-holder">
-									<img src="{% static 'images/project/project-3.jpg' %}" class="card-img" alt="image">
-								</div>
-								<div class="col-lg-8">
-									<div class="card-body">
-										<h5 class="card-title"><a href="project.html" class="theme-link">Project Heading</a></h5>
-										<p class="card-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. </p>
-										<p class="card-text"><small class="text-muted">Client: Google</small></p>
-									</div>
-								</div>
-							</div>
-							<div class="link-mask">
-								<a class="link-mask-link" href="project.html"></a>
-								<div class="link-mask-text">
-									<a class="btn btn-secondary" href="project.html">
-										<i class="fas fa-eye mr-2"></i>View Case Study
-									</a>
-								</div>
-							</div><!--//link-mask-->
-						</div><!--//card-->
-					</div><!--//col-->
-					<div class="col-md-6 mb-5">
-						<div class="card project-card">
-							<div class="row no-gutters">
-								<div class="col-lg-4 card-img-holder">
-									<img src="{% static 'images/project/project-4.jpg' %}" class="card-img" alt="image">
-								</div>
-								<div class="col-lg-8">
-									<div class="card-body">
-										<h5 class="card-title"><a href="project.html" class="theme-link">Project Heading</a></h5>
-										<p class="card-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. </p>
-										<p class="card-text"><small class="text-muted">Client: Uber</small></p>
-									</div>
-								</div>
-							</div>
-							<div class="link-mask">
-								<a class="link-mask-link" href="project.html"></a>
-								<div class="link-mask-text">
-									<a class="btn btn-secondary" href="project.html">
-										<i class="fas fa-eye mr-2"></i>View Case Study
-									</a>
-								</div>
-							</div><!--//link-mask-->
-						</div><!--//card-->
-					</div><!--//col-->
+				{% endfor %}
 				</div><!--//row-->
 				<div class="text-center py-3"><a href="portfolio.html" class="btn btn-primary"><i class="fas fa-arrow-alt-circle-right mr-2"></i>View Portfolio</a></div>
 				
@@ -362,12 +284,14 @@
 				</div><!--//row-->
 				<div class="text-center py-3"><a href="blog-home.html" class="btn btn-primary"><i class="fas fa-arrow-alt-circle-right mr-2"></i>View Blog</a></div>
 			</div><!--//container-->
-			
 		</section><!--//latest-blog-section-->
-		
 	</div><!--//main-wrapper-->
 
 <!-- Dark Mode -->
+		
+	<script src="{% static 'plugins/tiny-slider/min/tiny-slider.js' %}"></script>
+	<script src="{% static 'js/testimonials.js' %}"></script>
+	
 	<script src="{% static '/plugins/js-cookie.min.js' %}"></script>
 	<script src="{% static '/js/dark-mode.js' %}"></script>
 {% endblock %}

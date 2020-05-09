@@ -14,6 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.shortcuts import render
+from portfolio.models import Project
 
-def home_view(request):
-    return render(request,'index.html',{})
+def home(request):
+    projects = Project.objects.all()
+    context = {'projects': projects}
+    return render(request,'index.html',context)
+
+def contact(request):
+    return render(request,'contact.html',{})
