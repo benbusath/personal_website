@@ -24,16 +24,15 @@
 						    <h3 class="client-name font-weight-bold mb-4">{{ project.client }}</h3>
 						    <ul class="client-meta list-unstyled">
 							    <li class="mb-2"><i class="fas fa-industry fa-fw mr-2"></i><strong>Domain:</strong> {{ project.domain }}</li>
-							    <li class="mb-2"><i class="fas fa-users fa-fw mr-2"></i><strong>Size:</strong> 100+</li>
 							    <li class="mb-2"><strong><i class="fas fa-link fa-fw mr-2"></i>Website:</strong> <a class="{{ project.url }}" href="#">{{project.title}}</a></li>
 							    
 						    </ul>
-						    <div class="client-bio mb-4">{{ project.requirements }}</div>
+						    <div class="client-bio mb-4">{{ project.client_description }}</div>
 						    <h4 class="subheading mb-3">Project Requirements</h4>
 						    <ul class="mb-0">
-							    <li class="mb-2">Requirement lorem ipsum dolor sit amet, consectetuer adipiscing elit.</li>
-							    <li class="mb-2">Requirement donec pede justo, fringilla vel, aliquet nec.</li>
-							    <li class="mb-2">Requirement phasellus ullamcorper ipsum rutrum nunc. </li>
+							    {% for requirement in project.requirements %}
+								<li>{{ requirement }}</li>
+								{% endfor %}
 						    </ul>
 					    </div>					
 					</div><!--//media-body-->

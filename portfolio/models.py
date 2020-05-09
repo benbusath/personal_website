@@ -19,8 +19,11 @@ class Project(models.Model):
     description = models.TextField()
     detail = models.TextField()
     client = models.CharField(max_length = 20)
+    client_description = models.TextField()
     image = models.FileField(upload_to='images/project')
     requirements = models.TextField()
     domain = models.CharField(max_length = 20)
     website = models.URLField()
     categories = models.ManyToManyField(Category)
+    def get_requirements(self):
+        return requirements.split(',')

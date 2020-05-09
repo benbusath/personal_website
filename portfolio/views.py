@@ -10,5 +10,6 @@ def portfolio(request):
     
 def project(request, pk):
     project = Project.objects.get(pk=pk)
+    project.requirements = project.requirements.splitlines()
     context = {"project":project}
     return render(request, 'project.html', context)
