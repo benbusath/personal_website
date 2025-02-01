@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .slider-container {
+            position: relative;
+            width: 90%;
+            margin: 50px auto;
+        }
+
+        .timeline-wrapper {
+            position: relative;
+            overflow: hidden;
+            height: 100px;
+            cursor: grab;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .timeline-wrapper:active {
+            cursor: grabbing;
+        }
+
+        .timeline {
+            display: flex;
+            position: absolute;
+            transition: transform 0.3s ease;
+            height: 100%;
+            user-select: none;
+            padding: 0 20px;
+        }
+
+        .year {
+            width: 60px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            font-family: Arial, sans-serif;
+            color: #666;
+        }
+
+        .tick {
+            width: 2px;
+            height: 20px;
+            background: #999;
+            margin-bottom: 5px;
+        }
+
+        .range-bar {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 30px;
+            background: rgba(0, 123, 255, 0.2);
+            border-radius: 4px;
+            pointer-events: none;
+            transition: width 0.3s ease;
+        }
+
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        button.selected {
+            background: #004085;
+            transform: scale(1.1);
+        }
+
+        .range-controls {
+            margin-bottom: 20px;
+        }
+
+        .current-range {
+            margin-top: 10px;
+            font-family: Arial, sans-serif;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="slider-container">
+        <div class="timeline-wrapper" id="timelineWrapper">
+            <div class="timeline" id="timeline"></div>
+            <div class="range-bar" id="rangeBar"></div>
+        </div>
+        <div class="controls">
+            <div class="range-controls">
+                <button data-range="1">1 Year</button>
+                <button data-range="3" class="selected">3 Years</button>
+                <button data-range="5">5 Years</button>
+                <button data-range="7">7 Years</button>
+            </div>
+            <div>
+                <button id="prevBtn">&lt; Previous</button>
+                <button id="nextBtn">Next &gt;</button>
+            </div>
+            <div class="current-range" id="currentRange"></div>
+        </div>
+    </div>
+
+    <script>
+        const startYear = 2000;
+        const endYear = 2030;
+        const years = Array.from({length: endYear - startYear + 1}, (_, i) => startYear + i);
+        const timeline = document.getElementById('timeline');
+        const timelineWrapper = document.getElementById('timelineWrapper');
+        const rangeBar = document.getElementById('rangeBar');
+        const yearWidth = 60;
+        let currentPosition = 0;
+        let isDragging = false;
+        let startX, scrollLeft;
+        let currentRangeSize = 3;
+
+        // Initialize timeline
+        years.forEach(year => {
+            const yearEl = document.createElement('div');
+            yearEl.className = 'year';
+            yearEl.innerHTML = `
+                <div class="tick"></div>
+                <div>${year}</div>
+            `;
+            timeline.appendChild(yearEl);
+        });
+
+        // Set initial position
+        const initialCenterYear = 2015;
+        const initialIndex = years.indexOf(initialCenterYear);
+        timeline.style.transform = `translateX(-${initialIndex * yearWidth - window.innerWidth/2 + yearWidth/2}px)`;
+        currentPosition = parseFloat(timeline.style.transform.match(/translateX\(([-\d.]+)px/)[1]);
+        updateRangeDisplay();
+
+        // Button handlers
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            currentPosition += yearWidth;
+            timeline.style.transform = `translateX(${currentPosition}px)`;
+            updateRangeDisplay();
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            currentPosition -= yearWidth;
+            timeline.style.transform = `translateX(${currentPosition}px)`;
+            updateRangeDisplay();
+        });
+
+        // Range size controls
+        document.querySelectorAll('.range-controls button').forEach(button => {
+            button.addEventListener('click', () => {
+                currentRangeSize = parseInt(button.dataset.range);
+                document.querySelectorAll('.range-controls button').forEach(b => b.classList.remove('selected'));
+                button.classList.add('selected');
+                rangeBar.style.width = `${currentRangeSize * yearWidth}px`;
+                updateRangeDisplay();
+            });
+        });
+
+        // Drag handlers
+        timelineWrapper.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.pageX - timelineWrapper.offsetLeft;
+            scrollLeft = currentPosition;
+            timelineWrapper.style.cursor = 'grabbing';
+            timeline.style.transition = 'none';
+        });
+
+        timelineWrapper.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.pageX - timelineWrapper.offsetLeft;
+            const walk = (x - startX) * 2;
+            currentPosition = scrollLeft - walk;
+            timeline.style.transform = `translateX(${currentPosition}px)`;
+            updateRangeDisplay();
+        });
+
+        timelineWrapper.addEventListener('mouseup', () => {
+            isDragging = false;
+            timelineWrapper.style.cursor = 'grab';
+            timeline.style.transition = 'transform 0.3s ease';
+        });
+
+        timelineWrapper.addEventListener('mouseleave', () => {
+            isDragging = false;
+            timelineWrapper.style.cursor = 'grab';
+            timeline.style.transition = 'transform 0.3s ease';
+        });
+
+        // Update range display
+        function updateRangeDisplay() {
+            const centerPosition = -currentPosition + timelineWrapper.offsetWidth/2;
+            const centerYearIndex = Math.round(centerPosition / yearWidth);
+            const startYearIndex = Math.max(0, centerYearIndex - Math.floor(currentRangeSize/2));
+            const endYearIndex = Math.min(years.length-1, startYearIndex + currentRangeSize - 1);
+            
+            const displayedYears = years.slice(startYearIndex, endYearIndex + 1);
+            document.getElementById('currentRange').textContent = 
+                `Selected Range: ${displayedYears[0]} - ${displayedYears[displayedYears.length-1]}`;
+        }
+
+        // Initialize range bar
+        rangeBar.style.width = `${currentRangeSize * yearWidth}px`;
+    </script>
+</body>
+</html>
